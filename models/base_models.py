@@ -9,7 +9,7 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         layers = []
         layers.append(nn.ConvTranspose2d(opt.img_channels, opt.fcd, opt.kernel_dim, opt.padding, 1))
-        for i in range(1, opt.num_layers):
+        for i in range(1, opt.num_layers-2):
             input_size = int(opt.fcd/pow(2,(i+1)))
             layers.append(nn.ConvTranspose2d(max(2*input_size,opt.min_fcd), max(input_size,opt.min_fcd),
                                              opt.kernel_dim, 1, opt.padding))
@@ -29,7 +29,7 @@ class Generator(nn.Module):
         layers = []
         # 3 x 32 x 32 => 32 x 30 x 30 => 
         layers.append(nn.ConvTranspose2d(opt.img_channels, opt.fcd, opt.kernel_dim, opt.padding, 1))
-        for i in range(1, opt.num_layers):
+        for i in range(1, opt.num_layers-2):
             input_size = int(opt.fcd/pow(2,(i+1)))
             layers.append(nn.ConvTranspose2d(max(2*input_size,opt.min_fcd), max(input_size,opt.min_fcd),
                                              opt.kernel_dim, 1, opt.padding))
