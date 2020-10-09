@@ -7,16 +7,18 @@ def train_pyramid(opt):
 
 
 def train_layer(netD, netG ):
-    criterion = nn.BCELoss() #will be patchNCE
+    criterion = nn.MSELoss().to(device) #will be patchNCE
+    device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 
-    # Create batch of latent vectors that we will use to visualize
-    #  the progression of the generator
+    # Initialize the discriminator and generator models
+    netD, netG = init_models(opt, device)
+    weights_init(netD)
+    weights_init(netG)
+
+    # Latent vectors
     fixed_noise = torch.randn(64, nz, 1, 1, device=device)
 
-    # Establish convention for real and fake labels during training
-    real_label = 1.
-    fake_label = 0.
-
+    # Context: reals = 1, fakes = 0
     # Setup Adam optimizers for both G and D
     optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
     optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
@@ -24,6 +26,41 @@ def train_layer(netD, netG ):
     G_losses = []
     D_losses = []
     iters = 0
+
+    for epoch in range(opt.num_epochs):
+        start_time = time.time()
+        for i, data in enumerate(dataloader, 0):
+            if len(opt.gpu_ids) > 0:s
+                torch.cuda.synchronize()
+
+            # ----------------------
+            # Update Discriminator
+            # ----------------------
+            netD.zero_grad()
+            # Get real images
+            reals = data[0].to(device)
+            # Generate fake images
+            noise = torch.randn(reals.size(0), nz, 1, 1, device=device)
+            fakes = netG(noise)
+            # Discriminator forward training pass, compute loss
+            d_loss = netD.compute_D_loss(reals, fakes, criterion)
+            d_loss.backward()
+            optimizerD.step()
+
+            # ----------------------
+            # Update Generator
+            # ----------------------
+             netG.zero_grad()
+             # Have discriminator predict on fakes
+             fake_predictions = netD(fakes)
+             g_loss = netG.compute_G_loss(fake_predictions, criterion)
+             g_loss.backward()
+             optimizerG.step()
+            
+
+
+
+
 
 
     for epoch in range(opt.num_epochs):
@@ -97,7 +134,17 @@ def train_layer(netD, netG ):
                 img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
 
             iters += 1
+            
 
+def init_models(opt, device):
+    netD = Discriminator(opt).to(device)
+    netG = Generator(opt).to(device)
+    return netD, netG
 
-def init_models(opt):
-    generator = Generator(opt)
+def weights_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        nn.init.normal_(m.weight.data, 0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        nn.init.normal_(m.weight.data, 1.0, 0.02)
+        nn.init.constant_(m.bias.data, 0)

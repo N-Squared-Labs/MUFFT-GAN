@@ -13,7 +13,8 @@ def load_args():
     # Network Hyper Parameters
     arg_parser.add_argument('--num_layers', default=5)      # Number of layers in each discriminator or generator
     arg_parser.add_argument('--fcd', default=32)            # Fully Connected Depth for Last Layer
-    arg_parser.add_argument('--min_fcd', default=32)        # Minimum Fully Connected Depth for Last Layer
+    arg_parser.add_argument('--ndf', default=32)            # Network discriminator base depth scaling
+    arg_parser.add_argument('--ngf', default=32)            # Network generator depth scaling
     arg_parser.add_argument('--kernel_dim', default=3)      
     arg_parser.add_argument('--padding', default=0)
     arg_parser.add_argument('--stride', default=1)
