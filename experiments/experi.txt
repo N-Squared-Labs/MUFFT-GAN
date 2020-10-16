@@ -1,0 +1,17 @@
+fakes: torch.Size([8, 3, 64, 64])
+Fake Predictions:  torch.Size([8, 1, 3, 3])
+Fake Labels:  torch.Size([8, 1, 3, 3])
+Real Predictions:  torch.Size([8, 1, 3, 3])
+Real Labels:  torch.Size([8, 1, 3, 3])
+Traceback (most recent call last):
+  File "train.py", line 50, in <module>
+    train_pyramid(opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 15, in train_pyramid
+    train_layer(netD, netG, opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 58, in train_layer
+    g_loss.backward()
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\tensor.py", line 185, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\autograd\__init__.py", line 127, in backward
+    allow_unreachable=True)  # allow_unreachable flag
+RuntimeError: Trying to backward through the graph a second time, but the saved intermediate results have already been freed. Specify retain_graph=True when calling backward the first time.

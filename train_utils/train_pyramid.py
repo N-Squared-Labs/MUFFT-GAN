@@ -42,11 +42,10 @@ def train_layer(netD, netG, opt, dataloader):
             reals = data[0].to(opt.device)
             # Generate fake images
             noise = torch.randn(reals.size(0), opt.nz, 1, 1, device=opt.device)
-            print(noise.shape)
             fakes = netG(noise)
             # Discriminator forward training pass, compute loss
-            d_loss = netD.compute_D_loss(reals, fakes, criterion)
-            d_loss.backward()
+            d_loss = netD.compute_D_loss(reals, fakes, criterion, opt)
+            d_loss.backward(retain_graph=True)
             optimizerD.step()
 
             # ----------------------
@@ -55,7 +54,7 @@ def train_layer(netD, netG, opt, dataloader):
             netG.zero_grad()
             # Have discriminator predict on fakes
             fake_predictions = netD(fakes)
-            g_loss = netG.compute_G_loss(fake_predictions, criterion)
+            g_loss = netG.compute_G_loss(fake_predictions, criterion, opt)
             g_loss.backward()
             optimizerG.step()
             

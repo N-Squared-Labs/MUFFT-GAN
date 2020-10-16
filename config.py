@@ -18,9 +18,9 @@ def load_args():
     arg_parser.add_argument('--nz', default=100, type=int)
     arg_parser.add_argument('--ndf', default=32, type=int)            # Network discriminator base depth scaling
     arg_parser.add_argument('--ngf', default=32, type=int)            # Network generator depth scaling
-    arg_parser.add_argument('--kernel_dim', default=3, type=int)      
-    arg_parser.add_argument('--padding', default=0, type=int)
-    arg_parser.add_argument('--stride', default=1, type=int)
+    arg_parser.add_argument('--kernel_dim', default=4, type=int)      
+    arg_parser.add_argument('--padding', default=1, type=int)
+    arg_parser.add_argument('--stride', default=2, type=int)
     arg_parser.add_argument('--lr', default=0.0002, type=float)
 
     # Pyramid Parameters

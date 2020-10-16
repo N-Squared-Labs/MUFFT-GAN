@@ -47,4 +47,4 @@ if __name__ == '__main__':
     # reals = []
     # noise_amps = []
     # train_pyramid(opt, gens, noise, reals, noise_amps)
-    train_pyramid(opt, dataset)
+    train_pyramid(opt, dataloader)
