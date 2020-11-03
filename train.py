@@ -34,9 +34,9 @@ if __name__ == '__main__':
                            ]))
     dataloader = torch.utils.data.DataLoader(dataset, opt.batch_size, shuffle=True)
     # DEBUGGING START
-    reals = next(iter(dataloader))
+    reals = next(iter(dataloader))[0]
     print(type(reals))
-    print(shape(reals))
+    print(reals.shape)
 
     # DEBUGGING END
     # real_batch = next(iter(dataloader))

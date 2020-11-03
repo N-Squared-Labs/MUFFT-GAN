@@ -45,54 +45,25 @@ torch.Size([8, 64, 16, 16])
 torch.Size([8, 128, 8, 8])
 torch.Size([8, 256, 4, 4])
 torch.Size([8, 1, 1, 1])
-fake:
- tensor([[[[ 0.0156]]],
 
 
-        [[[ 0.2199]]],
-
-
-        [[[-0.3369]]],
-
-
-        [[[-0.4634]]],
-
-
-        [[[-0.0263]]],
-
-
-        [[[-0.4161]]],
-
-
-        [[[ 0.0172]]],
-
-
-        [[[ 0.1042]]]], device='cuda:0', grad_fn=<AddBackward0>)
-Discriminator
-torch.Size([8, 3, 64, 64])
-torch.Size([8, 64, 16, 16])
-torch.Size([8, 128, 8, 8])
-C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [2,0,0] Assertion `input_val >= zero && input_val <= one` failed.
-C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [3,0,0] Assertion `input_val >= zero && input_val <= one` failed.
-C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [4,0,0] Assertion `input_val >= zero && input_val <= one` failed.
-C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [5,0,0] Assertion `input_val >= zero && input_val <= one` failed.
 Traceback (most recent call last):
-  File "train.py", line 50, in <module>
+  File "train.py", line 56, in <module>
     train_pyramid(opt, dataloader)
   File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 17, in train_pyramid
     train_layer(netD, netG, opt, dataloader)
-  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 53, in train_layer
-    d_loss, fakes_class, reals_class = netD.compute_D_loss(reals, fakes, criterion, opt)
-  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 75, in compute_D_loss
-    real_predictions = self.forward(reals)
-  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 96, in forward
-    return self.model(x)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
-    result = self.forward(*input, **kwargs)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\container.py", line 117, in forward
-    input = module(input)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
-    result = self.forward(*input, **kwargs)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\batchnorm.py", line 113, in forward
-    self.num_batches_tracked = self.num_batches_tracked + 1
-RuntimeError: CUDA error: device-side assert triggered
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 83, in train_layer
+    plt.imshow(fakes[0])
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\matplotlib\pyplot.py", line 2684, in imshow
+    None else {}), **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\matplotlib\__init__.py", line 1599, in inner
+    return func(ax, *map(sanitize_sequence, args), **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\matplotlib\cbook\deprecation.py", line 369, in wrapper
+    return func(*args, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\matplotlib\cbook\deprecation.py", line 369, in wrapper
+    return func(*args, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\matplotlib\axes\_axes.py", line 5679, in imshow
+    im.set_data(X)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\matplotlib\image.py", line 690, in set_data
+    .format(self._A.shape))
+TypeError: Invalid shape (3, 64, 64) for image data

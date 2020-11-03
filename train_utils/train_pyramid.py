@@ -5,6 +5,7 @@ from config import load_args
 from train_utils.train_pyramid import *
 from train_utils.util_functions import *
 from models.base_models import *
+import torchvision.transforms as transforms
 
 
 def train_pyramid(opt, dataloader):
@@ -72,13 +73,23 @@ def train_layer(netD, netG, opt, dataloader):
         if epoch % 1 == 0:
             print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f'
             % (epoch, opt.num_epochs, dRec.item(), gRec.item(), fakes_class, reals_class))
-            plt.figure(figsize=(8,8))
+            plt.figure()
             plt.axis("off")
             plt.title("Training Images")
             fakes = netG(fixed_noise).detach().cpu()
+            mult =  torch.tensor(0.5, dtype=torch.float)
+            fakes = fakes * mult.expand_as(fakes)
+            fakes = fakes + mult.expand_as(fakes)
             print(fakes)
-            plt.imshow(np.transpose(vutils.make_grid(fakes, padding=2, normalize=True).cpu(),(1,2,0)))
-            filename = "generated" + str(epoch) + ".png"
+            # trans = transforms.ToPILImage()
+            # fakes = trans(fakes[0])
+            # Nick Test
+            translated_fake = np.einsum('kli->lik',fakes[0])
+            plt.imshow(translated_fake)
+            # Nick Test
+            # plt.imshow(fakes)
+            # Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+            filename = "generated/generated" + str(epoch) + ".png"
             plt.savefig(filename)
 
 
