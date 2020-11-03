@@ -33,6 +33,12 @@ if __name__ == '__main__':
                                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                            ]))
     dataloader = torch.utils.data.DataLoader(dataset, opt.batch_size, shuffle=True)
+    # DEBUGGING START
+    reals = next(iter(dataloader))
+    print(type(reals))
+    print(shape(reals))
+
+    # DEBUGGING END
     # real_batch = next(iter(dataloader))
     # plt.figure(figsize=(8,8))
     # plt.axis("off")

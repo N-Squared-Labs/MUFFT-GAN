@@ -1,17 +1,98 @@
-fakes: torch.Size([8, 3, 64, 64])
-Fake Predictions:  torch.Size([8, 1, 3, 3])
-Fake Labels:  torch.Size([8, 1, 3, 3])
-Real Predictions:  torch.Size([8, 1, 3, 3])
-Real Labels:  torch.Size([8, 1, 3, 3])
+[0/10]  Loss_D: 0.0027  Loss_G: 0.0004  D(x): 0.0187    D(G(z)): 0.9538
+[1/10]  Loss_D: 0.0003  Loss_G: 0.0001  D(x): 0.0091    D(G(z)): 0.9795
+[2/10]  Loss_D: 0.0001  Loss_G: 0.0001  D(x): 0.0100    D(G(z)): 0.9897
+[3/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0058    D(G(z)): 0.9888
+[4/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0044    D(G(z)): 0.9873
+[5/10]  Loss_D: 0.0000  Loss_G: 0.0000  D(x): 0.0049    D(G(z)): 0.9944
+[6/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0038    D(G(z)): 0.9907
+[7/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0027    D(G(z)): 0.9911
+[8/10]  Loss_D: 0.0000  Loss_G: 0.0000  D(x): 0.0042    D(G(z)): 0.9936
+[9/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0030    D(G(z)): 0.9910
+
+
+[0/10]  Loss_D: 0.0101  Loss_G: 0.0041  D(x): 0.0044    D(G(z)): 0.9843
+[1/10]  Loss_D: 0.0038  Loss_G: 0.0013  D(x): 0.0013    D(G(z)): 0.9938
+[2/10]  Loss_D: 0.0012  Loss_G: 0.0008  D(x): 0.0008    D(G(z)): 0.9985
+[3/10]  Loss_D: 0.0010  Loss_G: 0.0005  D(x): 0.0005    D(G(z)): 0.9986
+[4/10]  Loss_D: 0.0006  Loss_G: 0.0003  D(x): 0.0003    D(G(z)): 0.9991
+[5/10]  Loss_D: 0.0005  Loss_G: 0.0002  D(x): 0.0002    D(G(z)): 0.9992
+[6/10]  Loss_D: 0.0004  Loss_G: 0.0002  D(x): 0.0002    D(G(z)): 0.9994
+[7/10]  Loss_D: 0.0002  Loss_G: 0.0002  D(x): 0.0002    D(G(z)): 0.9997
+[8/10]  Loss_D: 0.0004  Loss_G: 0.0001  D(x): 0.0001    D(G(z)): 0.9994
+[9/10]  Loss_D: 0.0002  Loss_G: 0.0001  D(x): 0.0001    D(G(z)): 0.9996
+
+
+HERE
+Generator
+torch.Size([8, 3, 64, 64])
+torch.Size([8, 32, 64, 64])
+torch.Size([8, 64, 32, 32])
+torch.Size([8, 128, 16, 16])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 256, 8, 8])
+torch.Size([8, 128, 16, 16])
+torch.Size([8, 64, 32, 32])
+torch.Size([8, 32, 64, 64])
+torch.Size([8, 3, 64, 64])
+Discriminator
+torch.Size([8, 3, 64, 64])
+torch.Size([8, 64, 16, 16])
+torch.Size([8, 128, 8, 8])
+torch.Size([8, 256, 4, 4])
+torch.Size([8, 1, 1, 1])
+fake:
+ tensor([[[[ 0.0156]]],
+
+
+        [[[ 0.2199]]],
+
+
+        [[[-0.3369]]],
+
+
+        [[[-0.4634]]],
+
+
+        [[[-0.0263]]],
+
+
+        [[[-0.4161]]],
+
+
+        [[[ 0.0172]]],
+
+
+        [[[ 0.1042]]]], device='cuda:0', grad_fn=<AddBackward0>)
+Discriminator
+torch.Size([8, 3, 64, 64])
+torch.Size([8, 64, 16, 16])
+torch.Size([8, 128, 8, 8])
+C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [2,0,0] Assertion `input_val >= zero && input_val <= one` failed.
+C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [3,0,0] Assertion `input_val >= zero && input_val <= one` failed.
+C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [4,0,0] Assertion `input_val >= zero && input_val <= one` failed.
+C:/cb/pytorch_1000000000000/work/aten/src/ATen/native/cuda/Loss.cu:106: block: [0,0,0], thread: [5,0,0] Assertion `input_val >= zero && input_val <= one` failed.
 Traceback (most recent call last):
   File "train.py", line 50, in <module>
     train_pyramid(opt, dataloader)
-  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 15, in train_pyramid
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 17, in train_pyramid
     train_layer(netD, netG, opt, dataloader)
-  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 58, in train_layer
-    g_loss.backward()
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\tensor.py", line 185, in backward
-    torch.autograd.backward(self, gradient, retain_graph, create_graph)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\autograd\__init__.py", line 127, in backward
-    allow_unreachable=True)  # allow_unreachable flag
-RuntimeError: Trying to backward through the graph a second time, but the saved intermediate results have already been freed. Specify retain_graph=True when calling backward the first time.
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 53, in train_layer
+    d_loss, fakes_class, reals_class = netD.compute_D_loss(reals, fakes, criterion, opt)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 75, in compute_D_loss
+    real_predictions = self.forward(reals)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 96, in forward
+    return self.model(x)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\container.py", line 117, in forward
+    input = module(input)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\batchnorm.py", line 113, in forward
+    self.num_batches_tracked = self.num_batches_tracked + 1
+RuntimeError: CUDA error: device-side assert triggered

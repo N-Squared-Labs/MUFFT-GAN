@@ -1,4 +1,6 @@
 import torch.optim as optim
+import matplotlib.pyplot as plt
+import torchvision.utils as vutils
 from config import load_args
 from train_utils.train_pyramid import *
 from train_utils.util_functions import *
@@ -17,6 +19,7 @@ def train_pyramid(opt, dataloader):
 
 def train_layer(netD, netG, opt, dataloader):
     criterion = nn.MSELoss().to(opt.device) #will be patchNCE
+    #criterion = nn.BCELoss().to(opt.device)
 
     # Latent vectors
     fixed_noise = torch.randn(64, opt.nz, 1, 1, device=opt.device)
@@ -28,10 +31,14 @@ def train_layer(netD, netG, opt, dataloader):
     img_list = []
     G_losses = []
     D_losses = []
-    iters = 0
+    print("HERE")
+    #fixed_noise = torch.randn(25, opt.nz, 1, 1, device=opt.device)
+    fixed_noise = torch.randn(25, opt.nz, 1, 1, device=opt.device)
 
     for epoch in range(opt.num_epochs):
         # start_time = time.time()
+        dRec = 0
+        gRec = 0
         for i, data in enumerate(dataloader, 0):
 
             # ----------------------
@@ -41,10 +48,12 @@ def train_layer(netD, netG, opt, dataloader):
             # Get real images
             reals = data[0].to(opt.device)
             # Generate fake images
+            #noise = torch.randn(reals.size(0), opt.img_channels, opt.img_size, opt.img_size, device=opt.device)
             noise = torch.randn(reals.size(0), opt.nz, 1, 1, device=opt.device)
             fakes = netG(noise)
             # Discriminator forward training pass, compute loss
-            d_loss = netD.compute_D_loss(reals, fakes, criterion, opt)
+            d_loss, fakes_class, reals_class = netD.compute_D_loss(reals, fakes, criterion, opt)
+            dRec = d_loss
             d_loss.backward(retain_graph=True)
             optimizerD.step()
 
@@ -55,9 +64,22 @@ def train_layer(netD, netG, opt, dataloader):
             # Have discriminator predict on fakes
             fake_predictions = netD(fakes)
             g_loss = netG.compute_G_loss(fake_predictions, criterion, opt)
+            gRec = g_loss
             g_loss.backward()
             optimizerG.step()
-            
+
+        # if epoch % opt.snapshot_interval == 0:
+        if epoch % 1 == 0:
+            print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f'
+            % (epoch, opt.num_epochs, dRec.item(), gRec.item(), fakes_class, reals_class))
+            plt.figure(figsize=(8,8))
+            plt.axis("off")
+            plt.title("Training Images")
+            fakes = netG(fixed_noise).detach().cpu()
+            print(fakes)
+            plt.imshow(np.transpose(vutils.make_grid(fakes, padding=2, normalize=True).cpu(),(1,2,0)))
+            filename = "generated" + str(epoch) + ".png"
+            plt.savefig(filename)
 
 
 

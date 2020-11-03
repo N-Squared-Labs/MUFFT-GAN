@@ -11,9 +11,11 @@ def load_args():
     arg_parser.add_argument('--output_dir')                 # Directory of output image
     arg_parser.add_argument('--batch_size', default=8, type=int)      # Batch size for dataset
     arg_parser.add_argument('--device', default='cuda:0')
+    arg_parser.add_argument('--snapshot_interval', default=50)        # Epochs per snapshot network and produce image grid 
 
     # Network Hyper Parameters
     arg_parser.add_argument('--num_layers', default=5, type=int)      # Number of layers in each discriminator or generator
+    arg_parser.add_argument('--resnet_blocks', default=6, type=int)
     arg_parser.add_argument('--fcd', default=32, type=int)            # Fully Connected Depth for Last Layer
     arg_parser.add_argument('--nz', default=100, type=int)
     arg_parser.add_argument('--ndf', default=32, type=int)            # Network discriminator base depth scaling
