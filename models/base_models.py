@@ -17,7 +17,6 @@ class PrintLayer(nn.Module):
 # PatchGAN Discriminator simple implementation
 class Discriminator(nn.Module):
     def __init__(self, opt):
-        super(Discriminator, self).__init__()
        
         layers = []
         # layers.append(PrintLayer())
