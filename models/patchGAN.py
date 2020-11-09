@@ -2,6 +2,8 @@ import pathlib
 import torch
 from torchvision import datasets
 from torchvision import transforms
+import matplotlib.pyplot as plt
+import torch.nn as nn
 
 def weights_init(m):
     classname = m.__class__.__name__
@@ -17,7 +19,7 @@ class Generator(nn.Module):
         # ---------------------------------
         #     PatchGan Resnet Generator Code
         # ---------------------------------
-        super(generator, self).__init__()
+        super(Generator, self).__init__()
         # Unet encoder
         d = ngf
         self.conv1 = nn.Conv2d(3, d, 4, 2, 1)
@@ -88,6 +90,36 @@ class Generator(nn.Module):
         o = F.tanh(d8)
         return o
 
+class Discriminator(nn.Module):
+    # initializers
+    def __init__(self, ngf):
+        super(Discriminator, self).__init__()
+        d = ngf
+        self.conv1 = nn.Conv2d(6, d, 4, 2, 1)
+        self.conv2 = nn.Conv2d(d, d * 2, 4, 2, 1)
+        self.conv2_bn = nn.BatchNorm2d(d * 2)
+        self.conv3 = nn.Conv2d(d * 2, d * 4, 4, 2, 1)
+        self.conv3_bn = nn.BatchNorm2d(d * 4)
+        self.conv4 = nn.Conv2d(d * 4, d * 8, 4, 1, 1)
+        self.conv4_bn = nn.BatchNorm2d(d * 8)
+        self.conv5 = nn.Conv2d(d * 8, 1, 4, 1, 1)
+
+    # weight_init
+    def weight_init(self, mean, std):
+        for m in self._modules:
+            normal_init(self._modules[m], mean, std)
+
+    # forward method
+    def forward(self, input, label):
+        x = torch.cat([input, label], 1)
+        x = F.leaky_relu(self.conv1(x), 0.2)
+        x = F.leaky_relu(self.conv2_bn(self.conv2(x)), 0.2)
+        x = F.leaky_relu(self.conv3_bn(self.conv3(x)), 0.2)
+        x = F.leaky_relu(self.conv4_bn(self.conv4(x)), 0.2)
+        x = F.sigmoid(self.conv5(x))
+
+        return x
+
 
 def train():
     # args
@@ -110,7 +142,8 @@ def train():
         transforms.ToTensor(),
         transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
     ])
-    path = cwd / "datasets"
+    path = cwd / "../datasets"
+    print(path)
     subfolder = input_dir
     dset = datasets.ImageFolder(path, transform)
     ind = dset.class_to_idx[subfolder]
@@ -129,8 +162,8 @@ def train():
     fixed_x = test[:, :, :, 0:img_size]
     fixed_y = test[:, :, :, img_size:]
 
-    netG = generator(ngf).cuda()
-    netD = discriminator(ndf).cuda()
+    netG = Generator(ngf).cuda()
+    netD = Discriminator(ndf).cuda()
     netG.apply(weights_init)
     netD.apply(weights_init)
     BCE_loss = nn.BCELoss().cuda()
@@ -165,6 +198,22 @@ def train():
                 generated_fakes, y)
             G_train_loss.backward()
             G_optimizer.step()
+        
+        # Print images
+        if epoch % 1 == 0:
+            plt.figure()
+            plt.axis("off")
+            plt.title("Training Images")
+            fakes = netG(fixed_noise).detach().cpu()
+            mult =  torch.tensor(0.5, dtype=torch.float)
+            fakes = fakes * mult.expand_as(fakes)
+            fakes = fakes + mult.expand_as(fakes)
+            print(fakes)
+            translated_fake = np.einsum('kli->lik',fakes[0])
+            plt.imshow(translated_fake)
+            filename = "generated/generated" + str(epoch) + ".png"
+            plt.savefig(filename)
+
 
 if __name__ == "__main__":
     train()
