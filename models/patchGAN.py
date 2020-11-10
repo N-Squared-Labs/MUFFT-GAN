@@ -1,9 +1,13 @@
 import pathlib
 import torch
 from torchvision import datasets
+import torch.nn as nn
+import torch.optim as optim
 from torchvision import transforms
+from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import torch.nn as nn
+import torch.nn.functional as F
 
 def weights_init(m):
     classname = m.__class__.__name__
@@ -111,7 +115,10 @@ class Discriminator(nn.Module):
 
     # forward method
     def forward(self, input, label):
+        print(input.shape)
+        print(label.shape)
         x = torch.cat([input, label], 1)
+        print(x.shape)
         x = F.leaky_relu(self.conv1(x), 0.2)
         x = F.leaky_relu(self.conv2_bn(self.conv2(x)), 0.2)
         x = F.leaky_relu(self.conv3_bn(self.conv3(x)), 0.2)
@@ -160,7 +167,7 @@ def train():
     test = train_loader.__iter__().__next__()[0]
     img_size = test.size()[2]
     fixed_x = test[:, :, :, 0:img_size]
-    fixed_y = test[:, :, :, img_size:]
+    # fixed_y = test[:, :, :, img_size:]
 
     netG = Generator(ngf).cuda()
     netD = Discriminator(ndf).cuda()
@@ -172,47 +179,54 @@ def train():
     optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
 
     for epoch in range(num_epochs):
+        D_losses = []
+        G_losses = []
         for x, _ in train_loader:
             # Update D
             netD.zero_grad()
             y = x[:, :, :, img_size:]
             x = x[:, :, :, 0:img_size]
             x, y = Variable(x.cuda()), Variable(y.cuda())
-            real_pred = D(x, y).squeeze()
-            D_real_loss = BCE_loss(real_pred, Variable(torch.ones(real_pred.size()).cuda()))
+            # real_pred = netD(x, y).squeeze()
+            # D_real_loss = BCE_loss(real_pred, Variable(torch.ones(real_pred.size()).cuda()))
 
-            generated_fakes = G(x)
-            fake_pred = D(x, generated_fakes).squeeze()
+            generated_fakes = netG(x)
+            fake_pred = netD(x, generated_fakes).squeeze()
             D_fake_loss = BCE_loss(fake_pred, Variable(torch.zeros(fake_pred.size()).cuda()))
             D_train_loss = (D_real_loss + D_fake_loss) * 0.5
             D_train_loss.backward()
             D_optimizer.step()
+            D_losses.append(D_train_loss.data[0])
 
             # Update G
-            G.zero_grad()
+            netG.zero_grad()
             ## Code uses this but unsure if we need since it's called above? ##
-            generated_fakes = G(x)
-            fake_pred = D(x, generated_fakes).squeeze()
+            generated_fakes = netG(x)
+            fake_pred = netD(x, generated_fakes).squeeze()
             ## End unsure part ##
             G_train_loss = BCE_loss(fake_pred, Variable(torch.ones(fake_pred.size()).cuda())) + l1_lambda * L1_loss(
                 generated_fakes, y)
             G_train_loss.backward()
             G_optimizer.step()
-        
+            G_losses.append(G_train_loss.data[0])
+
+        print('[%d/%d] - loss_d: %.3f, loss_g: %.3f' % (
+        (epoch+1), num_epochs, torch.mean(torch.FloatTensor(D_losses)),
+        torch.mean(torch.FloatTensor(G_losses))))
         # Print images
-        if epoch % 1 == 0:
-            plt.figure()
-            plt.axis("off")
-            plt.title("Training Images")
-            fakes = netG(fixed_noise).detach().cpu()
-            mult =  torch.tensor(0.5, dtype=torch.float)
-            fakes = fakes * mult.expand_as(fakes)
-            fakes = fakes + mult.expand_as(fakes)
-            print(fakes)
-            translated_fake = np.einsum('kli->lik',fakes[0])
-            plt.imshow(translated_fake)
-            filename = "generated/generated" + str(epoch) + ".png"
-            plt.savefig(filename)
+        # if epoch % 1 == 0:
+        #     plt.figure()
+        #     plt.axis("off")
+        #     plt.title("Training Images")
+        #     fakes = netG(fixed_noise).detach().cpu()
+        #     mult =  torch.tensor(0.5, dtype=torch.float)
+        #     fakes = fakes * mult.expand_as(fakes)
+        #     fakes = fakes + mult.expand_as(fakes)
+        #     print(fakes)
+        #     translated_fake = np.einsum('kli->lik',fakes[0])
+        #     plt.imshow(translated_fake)
+        #     filename = "generated/generated" + str(epoch) + ".png"
+        #     plt.savefig(filename)
 
 
 if __name__ == "__main__":
