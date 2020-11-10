@@ -7,7 +7,7 @@ def load_args():
     arg_parser.add_argument('--input_dir_A', default='datasets/A')                  # Directory of input domain A
     arg_parser.add_argument('--input_dir_B', default='datasets/B')                  # Directory of input domain B
     arg_parser.add_argument('--translation')                # Type of Translation: Icy, Muddy, Wet, Grassy, Rocky
-    arg_parser.add_argument('--img_size', default=64, type=int)       # Size that input images get resized to
+    arg_parser.add_argument('--img_size', default=256, type=int)       # Size that input images get resized to
     arg_parser.add_argument('--img_channels', default=3, type=int)    # Number of channels of an input image
     arg_parser.add_argument('--output_dir')                 # Directory of output image
     arg_parser.add_argument('--batch_size', default=8, type=int)      # Batch size for dataset
