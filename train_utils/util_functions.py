@@ -42,29 +42,6 @@ def save_image(image, image_path):
 
 
 # -----------------------------------
-#       Dataset Class
-# -----------------------------------
-# Base dataset class which is inherited by the unpaired dataset class
-class Dataset():
-    # Initializes and saves options into the class
-    def __init__(self, opt):
-        self.opt = opt
-
-    @abstractmethod
-    def __getitem__(self, index):
-        pass
-
-    def transform_image(opt, grayscale=False, resize=False, method=Image.BICUBIC):
-        transformations = []
-        if graysscale:
-            transformations.append(transforms.GrayScale(1))
-        if resize:
-            transformations.append(transforms.Resize(opt.img_size), method)
-        # Can add more types of transforms here
-
-        return transforms.Compose(transformations)
-
-# -----------------------------------
 #       Unpaired Dataset Class
 # -----------------------------------
 # Dataset class specifically for unpaired datasets with images from domain A and domain B
@@ -94,6 +71,16 @@ class UnpairedDataset():
         B_final = image_transformation(B)
 
         return {'A': A_final, 'B': B_final, 'A_path': A_path, 'B_path': B_path}
+
+    def transform_image(opt, grayscale=False, resize=False, method=Image.BICUBIC):
+        transformations = []
+        if graysscale:
+            transformations.append(transforms.GrayScale(1))
+        if resize:
+            transformations.append(transforms.Resize(opt.img_size), method)
+        # Can add more types of transforms here
+
+        return transforms.Compose(transformations)
 
 
 # -----------------------------------
