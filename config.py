@@ -4,7 +4,8 @@ def load_args():
     arg_parser = argparse.ArgumentParser()
 
     # Loading, Inputs, Saving
-    arg_parser.add_argument('--input_dir', default='datasets')                  # Directory of input image
+    arg_parser.add_argument('--input_dir_A', default='datasets/A')                  # Directory of input domain A
+    arg_parser.add_argument('--input_dir_B', default='datasets/B')                  # Directory of input domain B
     arg_parser.add_argument('--translation')                # Type of Translation: Icy, Muddy, Wet, Grassy, Rocky
     arg_parser.add_argument('--img_size', default=64, type=int)       # Size that input images get resized to
     arg_parser.add_argument('--img_channels', default=3, type=int)    # Number of channels of an input image
