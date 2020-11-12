@@ -47,6 +47,9 @@ if __name__ == '__main__':
     for i, data in enumerate(dataloader):
         batch_size = data["A"].size(0)
         print(batch_size)
+        print(data["A"][:batch_size].size(0))
+        print(data["A"].shape)
+        break
     
     # Create Training Variables and call Training
     # real_img = read_input(opt)

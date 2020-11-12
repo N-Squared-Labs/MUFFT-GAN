@@ -77,14 +77,16 @@ class UnpairedDataset():
     def __len__(self):
         return self.size
 
-    def transform_image(self, opt, grayscale=False, resize=False, method=Image.BICUBIC):
+    def transform_image(self, opt, grayscale=False, resize=True, method=Image.BICUBIC):
         transformations = []
         if grayscale:
             transformations.append(transforms.GrayScale(1))
         if resize:
-            transformations.append(transforms.Resize(opt.img_size, method))
+            transformations.append(transforms.Resize((opt.img_size, opt.img_size), method))
         # Can add more types of transforms here
 
+        # Convert to tensor
+        transformations.append(transforms.ToTensor())
         return transforms.Compose(transformations)
 
     
