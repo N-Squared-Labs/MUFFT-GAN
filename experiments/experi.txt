@@ -1,135 +1,104 @@
-[0/10]  Loss_D: 0.0027  Loss_G: 0.0004  D(x): 0.0187    D(G(z)): 0.9538
-[1/10]  Loss_D: 0.0003  Loss_G: 0.0001  D(x): 0.0091    D(G(z)): 0.9795
-[2/10]  Loss_D: 0.0001  Loss_G: 0.0001  D(x): 0.0100    D(G(z)): 0.9897
-[3/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0058    D(G(z)): 0.9888
-[4/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0044    D(G(z)): 0.9873
-[5/10]  Loss_D: 0.0000  Loss_G: 0.0000  D(x): 0.0049    D(G(z)): 0.9944
-[6/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0038    D(G(z)): 0.9907
-[7/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0027    D(G(z)): 0.9911
-[8/10]  Loss_D: 0.0000  Loss_G: 0.0000  D(x): 0.0042    D(G(z)): 0.9936
-[9/10]  Loss_D: 0.0001  Loss_G: 0.0000  D(x): 0.0030    D(G(z)): 0.9910
-
-
-[0/10]  Loss_D: 0.0101  Loss_G: 0.0041  D(x): 0.0044    D(G(z)): 0.9843
-[1/10]  Loss_D: 0.0038  Loss_G: 0.0013  D(x): 0.0013    D(G(z)): 0.9938
-[2/10]  Loss_D: 0.0012  Loss_G: 0.0008  D(x): 0.0008    D(G(z)): 0.9985
-[3/10]  Loss_D: 0.0010  Loss_G: 0.0005  D(x): 0.0005    D(G(z)): 0.9986
-[4/10]  Loss_D: 0.0006  Loss_G: 0.0003  D(x): 0.0003    D(G(z)): 0.9991
-[5/10]  Loss_D: 0.0005  Loss_G: 0.0002  D(x): 0.0002    D(G(z)): 0.9992
-[6/10]  Loss_D: 0.0004  Loss_G: 0.0002  D(x): 0.0002    D(G(z)): 0.9994
-[7/10]  Loss_D: 0.0002  Loss_G: 0.0002  D(x): 0.0002    D(G(z)): 0.9997
-[8/10]  Loss_D: 0.0004  Loss_G: 0.0001  D(x): 0.0001    D(G(z)): 0.9994
-[9/10]  Loss_D: 0.0002  Loss_G: 0.0001  D(x): 0.0001    D(G(z)): 0.9996
-
-
-HERE
-Generator
-torch.Size([8, 3, 64, 64])
-torch.Size([8, 32, 64, 64])
-torch.Size([8, 64, 32, 32])
-torch.Size([8, 128, 16, 16])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 256, 8, 8])
-torch.Size([8, 128, 16, 16])
-torch.Size([8, 64, 32, 32])
-torch.Size([8, 32, 64, 64])
-torch.Size([8, 3, 64, 64])
-Discriminator
-torch.Size([8, 3, 64, 64])
-torch.Size([8, 64, 16, 16])
-torch.Size([8, 128, 8, 8])
-torch.Size([8, 256, 4, 4])
-torch.Size([8, 1, 1, 1])
-
-[91/100]        Loss_D: 0.0069  Loss_G: 0.0044  D(x): 0.0839    D(G(z)): 1.0032
-[92/100]        Loss_D: 0.0090  Loss_G: 0.0147  D(x): 0.0988    D(G(z)): 1.0735
-[93/100]        Loss_D: 0.0073  Loss_G: 0.0062  D(x): 0.0974    D(G(z)): 1.0205
-[94/100]        Loss_D: 0.0050  Loss_G: 0.0017  D(x): 0.0810    D(G(z)): 1.0096
-[95/100]        Loss_D: 0.0129  Loss_G: 0.0260  D(x): 0.1334    D(G(z)): 1.0563
-[96/100]        Loss_D: 0.0107  Loss_G: 0.0276  D(x): 0.1054    D(G(z)): 1.0842
-[97/100]        Loss_D: 0.0045  Loss_G: 0.0071  D(x): 0.0553    D(G(z)): 1.0410
-
-
-[0/100][0/8]    Loss_D: 3.0745  Loss_G: 2.2953  D(x): 0.5662    D(G(z)): 0.4621 / -0.1798
-[1/100][0/8]    Loss_D: 4.0748  Loss_G: 13.4374 D(x): 0.6308    D(G(z)): 0.2122 / 0.1654
-[2/100][0/8]    Loss_D: 11.4864 Loss_G: 48.1745 D(x): 0.9178    D(G(z)): 0.1332 / 0.0954
-[3/100][0/8]    Loss_D: 6.6940  Loss_G: 2.2142  D(x): 0.8504    D(G(z)): 0.0594 / 0.0400
-[4/100][0/8]    Loss_D: 0.4191  Loss_G: 1.0345  D(x): 0.9457    D(G(z)): 0.1168 / 0.0356
-[5/100][0/8]    Loss_D: 0.3990  Loss_G: 1.0406  D(x): 0.8897    D(G(z)): 0.0163 / 0.0325
-[6/100][0/8]    Loss_D: 0.3029  Loss_G: 1.0595  D(x): 0.8562    D(G(z)): 0.0041 / 0.0155
-[7/100][0/8]    Loss_D: 0.3058  Loss_G: 1.1474  D(x): 0.9302    D(G(z)): 0.0967 / 0.0168
-[8/100][0/8]    Loss_D: 0.4684  Loss_G: 3.3484  D(x): 1.0663    D(G(z)): 0.0936 / -0.0454
-[9/100][0/8]    Loss_D: 0.6244  Loss_G: 1.6198  D(x): 1.0038    D(G(z)): -0.0019 / 0.0278
-[10/100][0/8]   Loss_D: 0.2306  Loss_G: 1.0707  D(x): 0.8763    D(G(z)): 0.0627 / 0.0143
-[11/100][0/8]   Loss_D: 0.2329  Loss_G: 1.1372  D(x): 0.8841    D(G(z)): 0.0492 / 0.0066
-[12/100][0/8]   Loss_D: 0.3920  Loss_G: 1.0765  D(x): 0.9185    D(G(z)): 0.0380 / 0.0066
-[13/100][0/8]   Loss_D: 0.2643  Loss_G: 1.1521  D(x): 0.8765    D(G(z)): 0.1505 / -0.0044
-[14/100][0/8]   Loss_D: 0.8938  Loss_G: 2.7063  D(x): 1.0823    D(G(z)): 0.0852 / -0.1346
-[15/100][0/8]   Loss_D: 0.2785  Loss_G: 1.1018  D(x): 0.8522    D(G(z)): 0.0855 / 0.0389
-[16/100][0/8]   Loss_D: 6.3541  Loss_G: 3.9665  D(x): 0.9653    D(G(z)): -0.0311 / -0.0342
-[17/100][0/8]   Loss_D: 0.2525  Loss_G: 1.0875  D(x): 0.8522    D(G(z)): 0.1091 / -0.0009
-[18/100][0/8]   Loss_D: 4.5601  Loss_G: 4.0952  D(x): 0.9627    D(G(z)): -0.0115 / -0.0838
-[19/100][0/8]   Loss_D: 0.1316  Loss_G: 1.0165  D(x): 0.9021    D(G(z)): 0.1032 / 0.0126
-[20/100][0/8]   Loss_D: 0.1635  Loss_G: 1.1178  D(x): 0.9308    D(G(z)): 0.1162 / -0.0275
-[21/100][0/8]   Loss_D: 0.2578  Loss_G: 1.1788  D(x): 0.9780    D(G(z)): 0.1689 / -0.0334
-[22/100][0/8]   Loss_D: 0.2368  Loss_G: 1.4801  D(x): 1.0610    D(G(z)): 0.1348 / -0.1552
-[23/100][0/8]   Loss_D: 0.3726  Loss_G: 1.7190  D(x): 0.9971    D(G(z)): 0.2348 / -0.1922
-[24/100][0/8]   Loss_D: 0.4044  Loss_G: 2.1771  D(x): 1.0022    D(G(z)): 0.2239 / -0.1083
-[25/100][0/8]   Loss_D: 2.9520  Loss_G: 19.0324 D(x): 0.8819    D(G(z)): 0.0540 / 0.0909
-[26/100][0/8]   Loss_D: 0.1753  Loss_G: 1.3498  D(x): 0.9272    D(G(z)): 0.1360 / -0.0893
-[27/100][0/8]   Loss_D: 0.9596  Loss_G: 18.4472 D(x): 0.9903    D(G(z)): -0.0884 / 0.0272
-[28/100][0/8]   Loss_D: 0.2635  Loss_G: 1.1457  D(x): 0.7857    D(G(z)): 0.2033 / -0.0368
-[29/100][0/8]   Loss_D: 0.4071  Loss_G: 4.2667  D(x): 0.9015    D(G(z)): 0.0107 / 0.0210
-[30/100][0/8]   Loss_D: 1.4556  Loss_G: 8.7568  D(x): 1.0912    D(G(z)): 0.0345 / -0.0222
-[31/100][0/8]   Loss_D: 0.1814  Loss_G: 1.3651  D(x): 1.1232    D(G(z)): 0.1623 / -0.1346
-[32/100][0/8]   Loss_D: 0.3274  Loss_G: 1.6759  D(x): 0.9314    D(G(z)): 0.2318 / -0.1164
-[33/100][0/8]   Loss_D: 0.4915  Loss_G: 4.7875  D(x): 0.8962    D(G(z)): -0.0208 / 0.0082
-[34/100][0/8]   Loss_D: 0.4711  Loss_G: 1.2291  D(x): 1.0744    D(G(z)): 0.0337 / 0.0266
-[35/100][0/8]   Loss_D: 0.0901  Loss_G: 1.0007  D(x): 0.9348    D(G(z)): 0.0994 / 0.0115
-[36/100][0/8]   Loss_D: 0.1219  Loss_G: 1.1821  D(x): 0.9742    D(G(z)): 0.1393 / -0.0617
-[37/100][0/8]   Loss_D: 0.2124  Loss_G: 0.9384  D(x): 0.9710    D(G(z)): 0.1083 / 0.0702
-[38/100][0/8]   Loss_D: 0.2444  Loss_G: 1.4976  D(x): 0.9259    D(G(z)): 0.0670 / -0.1422
-[39/100][0/8]   Loss_D: 0.1141  Loss_G: 1.1720  D(x): 0.9395    D(G(z)): 0.1045 / -0.0630
-[40/100][0/8]   Loss_D: 0.1568  Loss_G: 1.2047  D(x): 0.8941    D(G(z)): 0.0400 / -0.0520
-[41/100][0/8]   Loss_D: 0.1872  Loss_G: 1.2866  D(x): 0.9075    D(G(z)): 0.2066 / -0.0892
-[42/100][0/8]   Loss_D: 0.2165  Loss_G: 1.3122  D(x): 0.9362    D(G(z)): 0.0305 / -0.0770
-[43/100][0/8]   Loss_D: 0.2547  Loss_G: 1.4996  D(x): 1.0400    D(G(z)): 0.1182 / -0.1491
-[44/100][0/8]   Loss_D: 0.2090  Loss_G: 1.3991  D(x): 1.0005    D(G(z)): 0.1596 / -0.1299
-[45/100][0/8]   Loss_D: 0.2900  Loss_G: 3.0706  D(x): 1.0975    D(G(z)): 0.0237 / -0.0445
-[46/100][0/8]   Loss_D: 0.3875  Loss_G: 2.1786  D(x): 1.1335    D(G(z)): 0.1271 / -0.1109
-[47/100][0/8]   Loss_D: 0.1736  Loss_G: 1.8959  D(x): 1.0113    D(G(z)): 0.1696 / -0.1616
-[48/100][0/8]   Loss_D: 0.2869  Loss_G: 1.7723  D(x): 0.9821    D(G(z)): -0.0322 / -0.0793
-[49/100][0/8]   Loss_D: 0.3371  Loss_G: 1.0543  D(x): 1.0626    D(G(z)): 0.1198 / 0.0014
-
-https://paperswithcode.com/method/patchgan
-https://stackoverflow.com/questions/57414277/alternative-to-scipy-misc-imresize
-
-
-models/patchGAN.py:233: DeprecationWarning: `imresize` is deprecated!
-`imresize` is deprecated in SciPy 1.0.0, and will be removed in 1.3.0.
-Use Pillow instead: ``numpy.array(Image.fromarray(arr).resize())``.
-  img = imresize(imgs[i].numpy(), [resize_scale, resize_scale])
 Traceback (most recent call last):
-  File "models/patchGAN.py", line 343, in <module>
-    x_ = imgs_resize(x_, opt.resize_scale)
-  File "models/patchGAN.py", line 233, in imgs_resize
-    img = imresize(imgs[i].numpy(), [resize_scale, resize_scale])
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\numpy\lib\utils.py", line 101, in newfunc
-    return func(*args, **kwds)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\scipy\misc\pilutil.py", line 555, in imresize
-    im = toimage(arr, mode=mode)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\numpy\lib\utils.py", line 101, in newfunc
-    return func(*args, **kwds)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\scipy\misc\pilutil.py", line 381, in toimage
-    bytedata = bytescale(data, high=high, low=low, cmin=cmin, cmax=cmax)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\numpy\lib\utils.py", line 101, in newfunc
-    return func(*args, **kwds)
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\scipy\misc\pilutil.py", line 93, in bytescale
-    cmin = data.min()
-  File "D:\Anaconda3\envs\pytorch\lib\site-packages\numpy\core\_methods.py", line 34, in _amin
-    return umr_minimum(a, axis, None, out, keepdims, initial, where)
+  File "train.py", line 53, in <module>
+    train_pyramid(opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 19, in train_pyramid
+    train_layer(netD, netG, netF, opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 59, in train_layer
+    optimizer_F = init_mlp_weights(data, netG, netF, opt)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 35, in init_mlp_weights
+    fake = netG(reals)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 109, in forward
+    return self.model(x)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\container.py", line 117, in forward
+    input = module(input)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\padding.py", line 170, in forward
+    return F.pad(input, self.padding, 'reflect')
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\functional.py", line 3556, in _pad
+    assert len(pad) == 2, '3D tensors expect 2 values for padding'
+AssertionError: 3D tensors expect 2 values for padding
+
+torch.Size([6, 256, 256])
+Traceback (most recent call last):
+  File "train.py", line 53, in <module>
+    train_pyramid(opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 19, in train_pyramid
+    train_layer(netD, netG, netF, opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 59, in train_layer
+    optimizer_F = init_mlp_weights(data, netG, netF, opt)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 35, in init_mlp_weights
+    fake = netG(reals, opt.nce_layers)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 106, in forward
+    if layer_id in layers:
+TypeError: 'in <string>' requires string as left operand, not int
+
+    for i, data in enumerate(dataset):
+        real_A = data['A']
+        real_B = data['B']
+        print(real_A.shape)
+        print(real_B.size)
+        reals = torch.cat((data['A'], data['B']), dim=0)
+        print(reals.shape)
+
+
+torch.Size([1, 3, 256, 256])
+torch.Size([1, 3, 256, 256])
+torch.Size([2, 3, 256, 256])
+
+
+    for i, data in enumerate(dataset):
+        real_A = data['A']
+        real_B = data['B']
+        print(real_A.shape)
+        print(real_B.shape)
+
+
+        A = transform(A_img)
+        B = transform(B_img)
+        print("HERE")
+        print(A.shape)
+        print(B.shape)
+HERE
+torch.Size([3, 256, 256])
+torch.Size([3, 256, 256])
+        return {'A': A, 'B': B, 'A_paths': A_path, 'B_paths': B_path}
+
+torch.Size([3, 256, 256])
+torch.Size([1, 3, 256, 256])
+torch.Size([1, 3, 256, 256])
+
+
+
+1125
+torch.Size([6, 256, 256])
+Traceback (most recent call last):
+  File "train.py", line 55, in <module>
+    train_pyramid(opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 19, in train_pyramid
+    train_layer(netD, netG, netF, opt, dataloader)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 59, in train_layer
+    optimizer_F = init_mlp_weights(data, netG, netF, opt)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\train_utils\train_pyramid.py", line 35, in init_mlp_weights
+    fake = netG(reals)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "C:\Users\ntseng\Documents\ROAHM\MUFFT-GAN\models\base_models.py", line 112, in forward
+    return self.model(x)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\container.py", line 117, in forward
+    input = module(input)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\modules\padding.py", line 170, in forward
+    return F.pad(input, self.padding, 'reflect')
+  File "D:\Anaconda3\envs\pytorch\lib\site-packages\torch\nn\functional.py", line 3556, in _pad
+    assert len(pad) == 2, '3D tensors expect 2 values for padding'
+AssertionError: 3D tensors expect 2 values for padding

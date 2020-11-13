@@ -1,36 +1,54 @@
-import random
-import numpy as np
-import torch.utils.data as data
-from PIL import Image
-import torchvision.transforms as transforms
-from abc import ABC, abstractmethod
+from packaging import version
+import torch
+from torch import nn
 
-def make_dataset(dir, max_dataset_size=float("inf")):
-    images = []
-    assert os.path.isdir(dir) or os.path.islink(dir), '%s is not a valid directory' % dir
-
-    for root, _, fnames in sorted(os.walk(dir, followlinks=True)):
-        for fname in fnames:
-            if is_image_file(fname):
-                path = os.path.join(root, fname)
-                images.append(path)
-    return images[:min(max_dataset_size, len(images))]
-
-
-class UnpairedFromFolder(data.dataset):
+### CODE FROM CUTGAN ###
+class PatchNCELoss(nn.Module):
     def __init__(self, opt):
-        dataset_dir = "datasets"
-        mode = "train"
+        super().__init__()
+        self.opt = opt
+        self.cross_entropy_loss = torch.nn.CrossEntropyLoss(reduction='none')
+        self.mask_dtype = torch.uint8 if version.parse(torch.__version__) < version.parse('1.2.0') else torch.bool
 
-        self.dir_A = os.path.join(dataset_dir, mode + 'A')
-        self.dir_B = os.path.join(dataset_dir, mode + 'B')
+    def forward(self, feat_q, feat_k):
+        batchSize = feat_q.shape[0]
+        dim = feat_q.shape[1]
+        feat_k = feat_k.detach()
 
-        self.A_paths = sorted(make_dataset(self.dir_A))
-        self.B_paths = sorted(make_dataset(self.dir_B))
-        self.A_size = len(self.A_paths)
-        self.B_size = len(self.B_paths)
+        # pos logit
+        l_pos = torch.bmm(feat_q.view(batchSize, 1, -1), feat_k.view(batchSize, -1, 1))
+        l_pos = l_pos.view(batchSize, 1)
 
+        # neg logit
 
+        # Should the negatives from the other samples of a minibatch be utilized?
+        # In CUT and FastCUT, we found that it's best to only include negatives
+        # from the same image. Therefore, we set
+        # --nce_includes_all_negatives_from_minibatch as False
+        # However, for single-image translation, the minibatch consists of
+        # crops from the "same" high-resolution image.
+        # Therefore, we will include the negatives from the entire minibatch.
+        if self.opt.nce_includes_all_negatives_from_minibatch:
+            # reshape features as if they are all negatives of minibatch of size 1.
+            batch_dim_for_bmm = 1
+        else:
+            batch_dim_for_bmm = self.opt.batch_size
 
-if __name__ == "__main__":
-    train()
+        # reshape features to batch size
+        feat_q = feat_q.view(batch_dim_for_bmm, -1, dim)
+        feat_k = feat_k.view(batch_dim_for_bmm, -1, dim)
+        npatches = feat_q.size(1)
+        l_neg_curbatch = torch.bmm(feat_q, feat_k.transpose(2, 1))
+
+        # diagonal entries are similarity between same features, and hence meaningless.
+        # just fill the diagonal with very small number, which is exp(-10) and almost zero
+        diagonal = torch.eye(npatches, device=feat_q.device, dtype=self.mask_dtype)[None, :, :]
+        l_neg_curbatch.masked_fill_(diagonal, -10.0)
+        l_neg = l_neg_curbatch.view(-1, npatches)
+
+        out = torch.cat((l_pos, l_neg), dim=1) / self.opt.nce_T
+
+        loss = self.cross_entropy_loss(out, torch.zeros(out.size(0), dtype=torch.long,
+                                                        device=feat_q.device))
+
+        return loss

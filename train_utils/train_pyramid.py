@@ -6,11 +6,14 @@ from train_utils.train_pyramid import *
 import train_utils.util_functions as util_func
 import models.base_models as base
 import torchvision.transforms as transforms
+import torch.nn as nn
+from models.patchNCE import PatchNCELoss
+import torch
 
 
 def train_pyramid(opt, dataloader):
     # Intialize the discriminator and generator for single layer
-    netD, netG, netF = init_layer_models()
+    netD, netG, netF = init_layer_models(opt)
     
     # [TESTING] Train a single layer 
     train_layer(netD, netG, netF, opt, dataloader)
@@ -25,13 +28,18 @@ def init_layer_models(opt):
 
     return netD, netG, netF
 
-def init_mlp_weights(data, opt):
-    reals = torch.cat((data['A'], data['B']), dim=0)
+def init_mlp_weights(data, netG, netF, opt):
+    real_A = torch.unsqueeze(data['A'], 0)
+    real_B = torch.unsqueeze(data['B'], 0)
+    print(real_A)
+    print(real_B)
+    reals = torch.cat((real_A, real_B), dim=0)
+    print(reals.shape)
     fake = netG(reals)
     fake_B = fake[:data['A'].size(0)]
     idt_B = fake[data['A'].size(0):]
-    netD.compute_D_loss().backward()
-    netGcompute_G_loss().backward()
+    netD.compute_D_loss(fake_B, real_B).backward()
+    netG.compute_G_loss(netD, netG, netF, fake_B, real_A).backward()
     optimizer_F = torch.optim.Adam(netF.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
     return optimizer_F
 
@@ -42,16 +50,16 @@ def train_layer(netD, netG, netF, opt, dataloader):
     mse_criterion = nn.MSELoss().to(opt.device)
     nce_criterion = []
     for nce_layer in [int(i) for i in opt.nce_layers.split(',')]:
-        nce_criterion.append(PatchNCELoss(opt).to(self.device))
-    self.idt_criterion = torch.nn.L1Loss().to(opt.device)
+        nce_criterion.append(PatchNCELoss(opt).to(opt.device))
+    idt_criterion = nn.L1Loss().to(opt.device)
     optimizer_D = torch.optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
     optimizer_G = torch.optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
     optimizer_F = None
 
     for epoch in range(opt.num_epochs):
-        for i, data in enumerate(dataset):
+        for i, data in enumerate(dataloader):
             if epoch == 0 and i == 0:
-                optimizer_F = init_mlp_weights(data, opt)
+                optimizer_F = init_mlp_weights(data, netG, netF, opt)
 
         # Generate Fakes
         real_A = data['A']
@@ -60,25 +68,26 @@ def train_layer(netD, netG, netF, opt, dataloader):
         fake = netG(reals)
         fake_B = fake[:data['A'].size(0)]
         idt_B = fake[data['A'].size(0):]
-        netD.compute_D_loss(fake_B, real_B).backward()
-        netG.compute_G_loss(net_D, netG, netF, fake_B, real_A).backward()
-        optimizer_F = torch.optim.Adam(netF.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
+
+        # netD.compute_D_loss(fake_B, real_B, mse_criterion).backward()
+        # netG.compute_G_loss(netD, netG, netF, fake_B, real_A, mse_criterion, nce_criterion).backward()
+        # optimizer_F = torch.optim.Adam(netF.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
 
         # update D
         set_requires_grad(netD, True)
         optimizer_D.zero_grad()
-        loss_D = netD.compute_D_loss()
-        loss_D.backward()
+        loss_D = netD.compute_D_loss(fake_B, real_B, mse_criterion).backward()
         optimizer_D.step()
 
         # update G
         set_requires_grad(netD, False)
         optimizer_G.zero_grad()
         optimizer_F.zero_grad()
-        loss_G = netG.compute_G_loss()
-        loss_G.backward()
+        loss_G = netG.compute_G_loss(netD, netG, netF, fake_B, real_A, mse_criterion, nce_criterion).backward()
         optimizer_G.step()
         optimizer_F.step()
+
+        print("epoch:", epoch, "| loss_D:", loss_D, "| loss_G:", loss_G)
 
 ### Old DCGAN/CUT Code ###
 # def train_layer(netD, netG, opt, dataloader):

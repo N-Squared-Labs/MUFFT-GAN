@@ -16,24 +16,26 @@ import torch.nn.functional as F
 class Discriminator(nn.Module):
     def __init__(self, opt):
         super(Discriminator, self).__init__()
+        self.register_buffer('real_label', torch.tensor(1.0))
+        self.register_buffer('fake_label', torch.tensor(0.0))
         layers = []
-        layers.append(nn.Conv2d(img_channels, ndf, 4, 2, 1, bias=False))
+        layers.append(nn.Conv2d(opt.img_channels, opt.ndf, 4, 2, 1, bias=False))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
         depth_scale_curr = 1
         depth_scale_prev = 1
-        for i in range(1, num_layers-2):
+        for i in range(1, opt.num_layers-2):
             depth_scale_prev = depth_scale_curr
-            depth_scale_curr = min(2**i, fcd)
-            layers.append(nn.Conv2d(ndf*depth_scale_prev, ndf*depth_scale_curr, 4, 2, 1))
-            layers.append(nn.BatchNorm2d(ndf*depth_scale_curr))
+            depth_scale_curr = min(2**i, opt.fcd)
+            layers.append(nn.Conv2d(opt.ndf*depth_scale_prev, opt.ndf*depth_scale_curr, 4, 2, 1))
+            layers.append(nn.BatchNorm2d(opt.ndf*depth_scale_curr))
             layers.append(nn.LeakyReLU(0.2, True))
         
         depth_scale_prev = depth_scale_curr
-        depth_scale_curr = min(2**(num_layers-2), fcd)
-        layers.append(nn.Conv2d(ndf*depth_scale_prev, ndf*depth_scale_curr, 4, 2, 1, bias=False))
-        layers.append(nn.BatchNorm2d(ndf*depth_scale_curr))
+        depth_scale_curr = min(2**(opt.num_layers-2), opt.fcd)
+        layers.append(nn.Conv2d(opt.ndf*depth_scale_prev, opt.ndf*depth_scale_curr, 4, 2, 1, bias=False))
+        layers.append(nn.BatchNorm2d(opt.ndf*depth_scale_curr))
         layers.append(nn.LeakyReLU(0.2, True))
-        layers.append(nn.Conv2d(ndf*depth_scale_curr, 1, 4, 1, 1, bias=False))
+        layers.append(nn.Conv2d(opt.ndf*depth_scale_curr, 1, 4, 1, 1, bias=False))
         layers.append(nn.Sigmoid())
 
         self.model = nn.Sequential(*layers)
@@ -41,12 +43,14 @@ class Discriminator(nn.Module):
     def forward(self, input):
         return self.model(input)
 
-    def compute_D_loss(self, fake_B, real_B):
+    def compute_D_loss(self, fake_B, real_B, criterion):
         fakes = fake_B.detach()
         fake_predictions = self.forward(fakes)
-        loss_fakes = criterion(fake_predictions, 0).mean()
+        fake_labels = self.fake_label.expand_as(fake_predictions)
+        loss_fakes = criterion(fake_predictions, fake_labels).mean()
         real_predictions = self.forward(real_B)
-        loss_reals = criterion(real_predictions, 1).mean()
+        real_labels = self.real_label.expand_as(real_predictions)
+        loss_reals = criterion(real_predictions, real_labels).mean()
 
         loss = (loss_fakes + loss_reals) / 2
         return loss
@@ -57,11 +61,15 @@ class Discriminator(nn.Module):
 class Generator(nn.Module):
     def __init__(self, opt):
         super(Generator, self).__init__()
+        self.register_buffer('fake_label', torch.tensor(0.0))
         layers=[]
+        layers.append(PrintLayer())
         layers.append(nn.ReflectionPad2d(3))
+        layers.append(PrintLayer())
         layers.append(nn.Conv2d(opt.img_channels, opt.ngf, kernel_size=7, stride=1, padding=0))
         layers.append(nn.BatchNorm2d(opt.ngf))
         layers.append(nn.ReLU(True))
+        layers.append(PrintLayer())
         
         # 64 x 64 x 32 -> 32 x 32 x 64 -> 16 x 16 x 128 -> 8 x 8 x 256
         for i in range(opt.num_layers-2):
@@ -89,20 +97,43 @@ class Generator(nn.Module):
         layers.append(nn.Tanh())
         self.model = nn.Sequential(*layers)
 
-    def forward(self, x):
-        return self.model(x)
+    def forward(self, x, layers=[], encode=False):
+        feature = x
+        features = []
+        if len(layers) > 0:
+            for layer_id, layer in enumerate(self.model):
+                feature = layer(feature)
+                if layer_id in layers:
+                    features.append(feature)
+                if layer_id == layers[-1] and encode:
+                    return features
+            return feature, features
+        else:
+            return self.model(x)
 
-    def compute_G_loss(self, netD, netG, netF, fake_B, real_A):
+    def compute_G_loss(self, netD, netG, netF, fake_B, real_A, criterion, NCE_criterion):
         fakes = fake_B
-        fake_predictions = netD.(fakes)
-        loss_G = criterion(fake_predictions, 0).mean() * self.opt.lambda_G
-        loss_NCE = compute_NCE_loss(netG, netF, real_A, fake_B)
-        loss_NCE_Y = compute_NCE_loss(netG, netF, real_B, idt_B)
+        fake_predictions = netD(fakes)
+        fake_labels = self.fake_label.expand_as(fake_predictions)
+        loss_G = criterion(fake_predictions, fake_labels).mean() * self.opt.lambda_G
+        loss_NCE = compute_NCE_loss(netG, netF, real_A, fake_B, NCE_criterion)
+        loss_NCE_Y = compute_NCE_loss(netG, netF, real_B, idt_B, NCE_criterion)
         loss = loss_G + (loss_NCE + loss_NCE_Y)/2
 
-    def compute_NCE_loss(netG, netF, dom_one, dom_two):
-        
+    def compute_NCE_loss(self, netG, netF, source, target, NCE_criterion):
+        num_nce_layers = len(self.opt.nce_layers)
+        feature_source = netG(source, self.opt.nce_layers, encode=True)
+        feature_target = netG(target, self.opt.nce_layers, encode=True)
 
+        feature_source_pool, sample_ids = netF(feature_source, self.opt.num_patches, None)
+        feature_target_pool, _ = netF(feature_target, self.opt.num_patches, sample_ids)
+
+        nce_loss = 0.0
+        for f_tar, f_src, crit, nce_layer in zip(feature_target_pool, feature_source_pool, NCE_criterion, self.opt.nce_layers):
+            loss = crit(f_tar, f_src) * self.opt.lambda_NCE
+            nce_loss += loss.mean()
+
+        return nce_loss / num_nce_layers
         
 # -------------------------------------------------
 # Resnet Block -- Generator
@@ -131,13 +162,13 @@ class ResnetBlock(nn.Module):
 # -------------------------------------------------
 # PatchNCE Model
 # -------------------------------------------------
-class NCE_MLP(nn.module):
+class NCE_MLP(nn.Module):
     def __init__(self, opt):
         super(NCE_MLP, self).__init__()
         self.opt = opt
         self.init_gain = 0.02
 
-    def forward(self, features, num_patches=16, patch_ids=None):
+    def forward(self, features, patch_ids=None):
         return_features = []
         return_ids = []
         for mlp_id, feature in enumerate(features):
@@ -155,7 +186,7 @@ class NCE_MLP(nn.module):
         for feature_id, feature in enumerate(features):
             reshaped = feature.permute(0, 2, 3, 1).flatten(1, 2)
             patch_id = torch.randperm(reshape.shape[1], device = features[0].device)
-            patch_id = patch_id[:int(min(num_patches, patch_id.shape[0]))]
+            patch_id = patch_id[:int(min(self.opt.num_patches, patch_id.shape[0]))]
             sample = reshape[:, patch_id, :].flatten(0, 1)
 
             mlp = getattr(self, 'mlp_%d' % feature_id)

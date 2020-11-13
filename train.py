@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from config import load_args
-# from train_utils.train_pyramid import *
+from train_utils.train_pyramid import *
 from train_utils.util_functions import *
 
 if __name__ == '__main__':
@@ -42,14 +42,17 @@ if __name__ == '__main__':
     dataloader = UnpairedDataset(opt)
     dataset_size = len(dataloader)
     print(dataset_size)
-    real_batch = next(iter(dataloader))
-    print(real_batch)
-    for i, data in enumerate(dataloader):
-        batch_size = data["A"].size(0)
-        print(batch_size)
-        print(data["A"][:batch_size].size(0))
-        print(data["A"].shape)
-        break
+    # real_batch = next(iter(dataloader))
+    # print(real_batch)
+    # for i, data in enumerate(dataloader):
+    #     test = data["A"].shape
+    #     print(test)
+    #     real_A = torch.unsqueeze(data['A'], 0)
+    #     print(real_A.shape)
+    #     real_B = torch.unsqueeze(data['B'], 0)
+    #     print(real_B.shape)
+    #     break
+    train_pyramid(opt, dataloader)
     
     # Create Training Variables and call Training
     # real_img = read_input(opt)
