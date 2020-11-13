@@ -16,6 +16,7 @@ def load_args():
 
     # Network Hyper Parameters
     arg_parser.add_argument('--num_layers', default=5, type=int)      # Number of layers in each discriminator or generator
+    arg_parser.add_argument('--num_nce_layers', default='0,4,8,12,16', type=str)
     arg_parser.add_argument('--resnet_blocks', default=6, type=int)
     arg_parser.add_argument('--fcd', default=32, type=int)            # Fully Connected Depth for Last Layer
     arg_parser.add_argument('--nz', default=100, type=int)

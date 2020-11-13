@@ -41,22 +41,15 @@ class Discriminator(nn.Module):
     def forward(self, input):
         return self.model(input)
 
-    def compute_D_loss(self, reals, fakes, criterion, opt):
+    def compute_D_loss(self, fake_B, real_B):
+        fakes = fake_B.detach()
         fake_predictions = self.forward(fakes)
-        fake_label =  torch.tensor(0, dtype=torch.float, device=opt.device)
-        fake_label = fake_label.expand_as(fake_predictions)
-        loss_fakes = criterion(fake_predictions, fake_label).mean()
+        loss_fakes = criterion(fake_predictions, 0).mean()
+        real_predictions = self.forward(real_B)
+        loss_reals = criterion(real_predictions, 1).mean()
 
-        real_predictions = self.forward(reals)
-        real_label =  torch.tensor(1, dtype=torch.float, device=opt.device)
-        real_label = real_label.expand_as(real_predictions)
-        loss_reals = criterion(real_predictions, real_label).mean()
-       
         loss = (loss_fakes + loss_reals) / 2
-        fakes_class = fake_predictions.mean().item()
-        reals_class = real_predictions.mean().item()
-
-        return loss, fakes_class, reals_class
+        return loss
 
 # -------------------------------------------------
 # Generator
@@ -99,12 +92,18 @@ class Generator(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-    def compute_G_loss(self, fake_predictions, criterion, opt):
-        fake_label =  torch.tensor(0, dtype=torch.float, device=opt.device)
-        fake_label = fake_label.expand_as(fake_predictions)
-        loss = criterion(fake_predictions, fake_label).mean() * opt.lambda_G
-        return loss
+    def compute_G_loss(self, netD, netG, netF, fake_B, real_A):
+        fakes = fake_B
+        fake_predictions = netD.(fakes)
+        loss_G = criterion(fake_predictions, 0).mean() * self.opt.lambda_G
+        loss_NCE = compute_NCE_loss(netG, netF, real_A, fake_B)
+        loss_NCE_Y = compute_NCE_loss(netG, netF, real_B, idt_B)
+        loss = loss_G + (loss_NCE + loss_NCE_Y)/2
 
+    def compute_NCE_loss(netG, netF, dom_one, dom_two):
+        
+
+        
 # -------------------------------------------------
 # Resnet Block -- Generator
 # -------------------------------------------------
@@ -139,8 +138,8 @@ class NCE_MLP(nn.module):
         self.init_gain = 0.02
 
     def forward(self, features, num_patches=16, patch_ids=None):
-        return_ids = []
         return_features = []
+        return_ids = []
         for mlp_id, feature in enumerate(features):
             layers = []
             layers.append(nn.Linear(feature.shape[1], opt.image_channels))
@@ -149,11 +148,22 @@ class NCE_MLP(nn.module):
             self.mlp = nn.Sequential(*layers)
             self.mlp.cuda()
             setattr(self, 'mlp_%d' % mlp_id, mlp)
-        # May need to initialize this net but not sure, in CUTGAN they call init_net
-        
+        # Utilize GPUs, need to fully implement
+        self.to(self.opt.device) # Need to create an option for a GPU ID
+        # CutGAN had init_weights here, but we do it in train_pyramid
 
+        for feature_id, feature in enumerate(features):
+            reshaped = feature.permute(0, 2, 3, 1).flatten(1, 2)
+            patch_id = torch.randperm(reshape.shape[1], device = features[0].device)
+            patch_id = patch_id[:int(min(num_patches, patch_id.shape[0]))]
+            sample = reshape[:, patch_id, :].flatten(0, 1)
 
+            mlp = getattr(self, 'mlp_%d' % feature_id)
+            sample = mlp(sample)
 
+            return_features.append(sample)
+
+        return return_features, return_ids
 
 # -------------------------------------------------
 # Helper Print Function

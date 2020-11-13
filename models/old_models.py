@@ -56,9 +56,24 @@
         # self.model = nn.Sequential(*layers)
 
 
+# -----------------------
+# Compute D Loss
+# -----------------------
 
+# def compute_D_loss(self, reals, fakes, criterion, opt):
+        # fake_predictions = self.forward(fakes)
+        # fake_label =  torch.tensor(0, dtype=torch.float, device=opt.device)
+        # fake_label = fake_label.expand_as(fake_predictions)
+        # loss_fakes = criterion(fake_predictions, fake_label).mean()
 
-
+        # real_predictions = self.forward(reals)
+        # real_label =  torch.tensor(1, dtype=torch.float, device=opt.device)
+        # real_label = real_label.expand_as(real_predictions)
+        # loss_reals = criterion(real_predictions, real_label).mean()
+       
+        # loss = (loss_fakes + loss_reals) / 2
+        # fakes_class = fake_predictions.mean().item()
+        # reals_class = real_predictions.mean().item()
 
 
 
@@ -113,3 +128,17 @@
 
 #     def forward(self, x):
 #         return self.model(x)
+
+
+
+# -----------------------
+# Compute G Loss
+# -----------------------
+
+
+
+    # def compute_G_loss(self, fake_predictions, criterion, opt):
+    #     # fake_label =  torch.tensor(0, dtype=torch.float, device=opt.device)
+    #     # fake_label = fake_label.expand_as(fake_predictions)
+    #     # loss = criterion(fake_predictions, fake_label).mean() * opt.lambda_G
+    #     return loss

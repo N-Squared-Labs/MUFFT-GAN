@@ -54,12 +54,14 @@ def train_layer(netD, netG, netF, opt, dataloader):
                 optimizer_F = init_mlp_weights(data, opt)
 
         # Generate Fakes
+        real_A = data['A']
+        real_B = data['B']
         reals = torch.cat((data['A'], data['B']), dim=0)
         fake = netG(reals)
         fake_B = fake[:data['A'].size(0)]
         idt_B = fake[data['A'].size(0):]
-        netD.compute_D_loss().backward()
-        netGcompute_G_loss().backward()
+        netD.compute_D_loss(fake_B, real_B).backward()
+        netG.compute_G_loss(net_D, netG, netF, fake_B, real_A).backward()
         optimizer_F = torch.optim.Adam(netF.parameters(), lr=opt.lr, betas=(opt.beta1, opt.beta2))
 
         # update D
