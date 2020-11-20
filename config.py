@@ -9,10 +9,10 @@ def load_args():
     arg_parser.add_argument('--translation')                # Type of Translation: Icy, Muddy, Wet, Grassy, Rocky
     arg_parser.add_argument('--img_size', default=256, type=int)       # Size that input images get resized to
     arg_parser.add_argument('--img_channels', default=3, type=int)    # Number of channels of an input image
-    arg_parser.add_argument('--output_dir')                 # Directory of output image
+    arg_parser.add_argument('--output_dir', default ='datasets/results')                 # Directory of output image
     arg_parser.add_argument('--batch_size', default=8, type=int)      # Batch size for dataset
     arg_parser.add_argument('--device', default='cuda:0')
-    arg_parser.add_argument('--snapshot_interval', default=50)        # Epochs per snapshot network and produce image grid 
+    arg_parser.add_argument('--snapshot_interval', default=5)        # Epochs per snapshot network and produce image grid 
 
     # Network Hyper Parameters
     arg_parser.add_argument('--num_layers', default=5, type=int)      # Number of layers in each discriminator or generator

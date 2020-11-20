@@ -99,6 +99,7 @@ class UnpairedDataset():
 
         # Convert to tensor
         transformations.append(transforms.ToTensor())
+        transformations.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
         return transforms.Compose(transformations)
 
     
