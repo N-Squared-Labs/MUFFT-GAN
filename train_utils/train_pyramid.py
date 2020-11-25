@@ -96,7 +96,8 @@ def train_layer(netD, netG, netF, opt, dataloader):
             optimizer_G.step()
             optimizer_F.step()
 
-            print("epoch:", epoch, "iter:", i, "| loss_D:", loss_D.item(), "| loss_G:", loss_G.item())
+            # print("epoch:", epoch, "iter:", i, "| loss_D:", loss_D.item(), "| loss_G:", loss_G.item())
+        print("epoch:", epoch, "| loss_D:", loss_D.item(), "| loss_G:", loss_G.item())
 
         if epoch % opt.snapshot_interval == 0:
             plot_img = util_functions.tensor_to_image(fake_B)
