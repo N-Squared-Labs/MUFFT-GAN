@@ -39,11 +39,8 @@ if __name__ == '__main__':
     # plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(opt.device)[:64], padding=2, normalize=True).cpu(),(1,2,0)))
     # plt.savefig("test.png")
 
-    dataloader = UnpairedDataset(opt)
+    dataloader = torch.utils.data.DataLoader(UnpairedDataset(opt), opt.batch_size, shuffle=True, drop_last=True)
     dataset_size = len(dataloader)
-    print(dataset_size)
-    # real_batch = next(iter(dataloader))
-    # print(real_batch)
     # for i, data in enumerate(dataloader):
     #     test = data["A"].shape
     #     print(test)
@@ -52,6 +49,7 @@ if __name__ == '__main__':
     #     real_B = torch.unsqueeze(data['B'], 0)
     #     print(real_B.shape)
     #     break
+
     train_pyramid(opt, dataloader)
     
     # Create Training Variables and call Training

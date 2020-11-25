@@ -37,11 +37,17 @@ def is_image(filename):
     return any(filename.endswith(extension) for extension in ['.jpg', '.png', '.JPG', '.PNG', '.jpeg', '.JPEG', '.tif', '.TIF'])
 
 # Turns a tensor array into a numpy image array
-# def tensor_to_image(image_arr):
-
+def tensor_to_image(image_arr):
+    tensor = image_arr.data
+    np_arr = tensor[0].clamp(-1.0, 1.0).cpu().float().numpy()
+    np_arr = (np.transpose(np_arr, (1, 2, 0)) + 1) / 2.0 * 255.0
+    return np_arr.astype(np.uint8)
 
 # Saves a numpy image to the disk
-# def save_image(image, image_path):
+def save_image(image_arr, image_path):
+    image_pil = Image.fromarray(image_arr)
+    image_pil.save(image_path)
+
 
 def init_weights(net):
     def init_func(m):
@@ -73,7 +79,7 @@ class UnpairedDataset():
 
     def __getitem__(self, index):
         # Get image from domain A at index, get random image from domain B
-        A_path = self.A_paths[index]
+        A_path = self.A_paths[index % len(self.A_paths)]
         B_path = self.B_paths[random.randint(0, len(self.B_paths)-1)]
 
         #Convert to RGB Images
